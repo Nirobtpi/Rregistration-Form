@@ -12,3 +12,13 @@ try {
 } catch (PDOException $e) {
     echo "Connection Fail " . $e->getMessage();
 }
+
+// creatte function 
+
+function value($val) {
+    if(isset($_POST[$val])){
+        echo $_POST[$val];
+    }
+};
+
+

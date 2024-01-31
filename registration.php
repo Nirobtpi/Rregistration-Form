@@ -1,6 +1,31 @@
 <?php
 require_once('config.php');
 
+// registration from code 
+if (isset($_POST['submit'])) {
+    $name = $_POST['name'];
+    $email = $_POST['email'];
+    $phone = $_POST['phone'];
+    $gender = $_POST['gender'];
+
+    if (empty($name)) {
+        $error = "Please Enter Your Name";
+    } elseif (empty($email)) {
+        $error = "Please Enter Your Email";
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $error = "Please Enter A Valid Email";
+    } elseif (empty($phone)) {
+        $error = "Please Enter Your Phone Number";
+    } elseif (!is_numeric($phone)) {
+        $error = "Phone Number Must Be Use Number";
+    } elseif (strlen($phone) < 11) {
+        $error = "Phone Number Must Be Used 11 Digit";
+    } elseif (empty($gender)) {
+        $error = "Please Enter Your Gender";
+    }
+}
+
+
 ?>
 
 <!doctype html>
@@ -50,16 +75,53 @@ require_once('config.php');
         <div class="container">
             <div class="row">
                 <div class="col-md-6 offset-2">
-                    <div class="card text-start p-3">
+                    <div class="card text-start p-3 shadow">
                         <div class="card-body">
                             <h4 class="card-title border-bottom py-3">Registration Form</h4>
 
-                            <div class="form">
-                                <?php if(isset($error)): ?>
+                            <div class="form ">
+                                <?php if (isset($error)) : ?>
                                     <div class="alert alert-danger">
-                                        
+                                        <?php echo $error; ?>
                                     </div>
                                 <?php endif; ?>
+                                <?php if (isset($success)) : ?>
+                                    <div class="alert alert-success">
+                                        <?php echo $success;  ?>
+                                    </div>
+                                <?php endif; ?>
+
+                                <form action="" method="POST">
+                                    <div class="mb-3">
+                                        <label for="name" class="form-label">Name</label>
+                                        <input type="text" class="form-control" name="name" id="name" value="<?php value('name') ?>" placeholder="Enter Your Name" />
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="email" class="form-label">Email Address</label>
+                                        <input type="email" class="form-control" name="email" id="email" value="<?php value('email') ?>" placeholder="Enter Your Email" />
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="phone" class="form-label">Phone Number</label>
+                                        <input type="text" class="form-control" name="phone" id="phone" value="<?php value('phone') ?>" placeholder="Enter Your Phone Number" />
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="gender" id="male" value="male" <?php if(isset($_POST['gender']) && $_POST['gender'] ==='male'){ echo "checked";} ?> />
+                                        <label class="form-check-label" for="male"> Male </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="gender" id="female" value="female" <?php if(isset($_POST['gender'])&& $_POST['gender'] === "female"){ echo "checked";} ?> />
+                                        <label class="form-check-label" for="female"> Female </label>
+                                    </div>
+                                    <div class="form-check mb-3">
+                                        <input class="form-check-input" type="radio"  name="gender" id="custom" value="custom" <?php if(isset($_POST['gender']) && $_POST['gender'] === 'custom'){ echo 'checked';} ?> />
+                                        <label class="form-check-label" for="custom"> Custom </label>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <input type="submit" class="btn btn-success" name="submit" value="Registration Now">
+                                    </div>
+                                </form>
+
                             </div>
 
                         </div>
