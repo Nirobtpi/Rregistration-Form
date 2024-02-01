@@ -1,12 +1,19 @@
 <?php
 require_once('config.php');
+session_start();
 
 // registration from code 
 if (isset($_POST['submit'])) {
     $name = $_POST['name'];
     $email = $_POST['email'];
     $phone = $_POST['phone'];
+    $password=$_POST['password'];
+    $confirmPassword=$_POST['confirmpassword'];
     $gender = $_POST['gender'];
+
+    $emialCount= rowCount('user','email',$email);
+    $mobileCount= rowCount('user','phone',$phone);
+    
 
     if (empty($name)) {
         $error = "Please Enter Your Name";
@@ -20,19 +27,43 @@ if (isset($_POST['submit'])) {
         $error = "Phone Number Must Be Use Number";
     } elseif (strlen($phone) < 11) {
         $error = "Phone Number Must Be Used 11 Digit";
-    } elseif (empty($gender)) {
+    }elseif(empty($password)){
+        $error="Enter Your Password";
+    }elseif($password != $confirmPassword){
+        $error="Password Does Not Match";
+    }elseif(strlen($password) <6 || strlen($password) >11){
+        $error="Password Must Be Used 6 to 11 Digit";
+    }
+    elseif($emialCount !=0){
+        $error="Email Alrady Used!";
+    }
+    elseif($mobileCount !=0){
+        $error="Phone Number Alrady Used!";
+    }
+     elseif (empty($gender)) {
         $error = "Please Enter Your Gender";
+    }else{
+        unset($_POST);
+
+        $password=sha1($password);
+        $created_At=date("Y-m-d H:i:s");
+        
+        $stm=$conn->prepare("INSERT INTO user (name,email,phone,password,gender,created_At) VALUES(?,?,?,?,?,?)");
+        $stm->execute(array($name,$email,$phone,$password,$gender,$created_At));
+
+        $success="Data Insert Successfully!";
+
+        header('location:index.php');
     }
 }
 
 
 ?>
-
 <!doctype html>
 <html lang="en">
 
 <head>
-    <title>Title</title>
+    <title>Student Registration</title>
     <!-- Required meta tags -->
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
@@ -104,16 +135,31 @@ if (isset($_POST['submit'])) {
                                         <label for="phone" class="form-label">Phone Number</label>
                                         <input type="text" class="form-control" name="phone" id="phone" value="<?php value('phone') ?>" placeholder="Enter Your Phone Number" />
                                     </div>
+                                    <div class="mb-3">
+                                        <label for="password" class="form-label">Password</label>
+                                        <input type="password" class="form-control" name="password" id="password" value="<?php value('password') ?>" placeholder="Enter Your Phone Password" />
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="confirmpassword" class="form-label">Confir Password</label>
+                                        <input type="password" class="form-control" name="confirmpassword" id="confirmpassword" value="<?php value('confirmpassword') ?>" placeholder="Enter Your Phone Confirm Password" />
+                                    </div>
+
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="gender" id="male" value="male" <?php if(isset($_POST['gender']) && $_POST['gender'] ==='male'){ echo "checked";} ?> />
+                                        <input class="form-check-input" type="radio" name="gender" id="male" value="male" <?php if (isset($_POST['gender']) && $_POST['gender'] === 'male') {
+                                                                                                                                echo "checked";
+                                                                                                                            } ?> />
                                         <label class="form-check-label" for="male"> Male </label>
                                     </div>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="gender" id="female" value="female" <?php if(isset($_POST['gender'])&& $_POST['gender'] === "female"){ echo "checked";} ?> />
+                                        <input class="form-check-input" type="radio" name="gender" id="female" value="female" <?php if (isset($_POST['gender']) && $_POST['gender'] === "female") {
+                                                                                                                                    echo "checked";
+                                                                                                                                } ?> />
                                         <label class="form-check-label" for="female"> Female </label>
                                     </div>
                                     <div class="form-check mb-3">
-                                        <input class="form-check-input" type="radio"  name="gender" id="custom" value="custom" <?php if(isset($_POST['gender']) && $_POST['gender'] === 'custom'){ echo 'checked';} ?> />
+                                        <input class="form-check-input" type="radio" name="gender" id="custom" value="custom" <?php if (isset($_POST['gender']) && $_POST['gender'] === 'custom') {
+                                                                                                                                    echo 'checked';
+                                                                                                                                } ?> />
                                         <label class="form-check-label" for="custom"> Custom </label>
                                     </div>
 

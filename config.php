@@ -13,12 +13,4 @@ try {
     echo "Connection Fail " . $e->getMessage();
 }
 
-// creatte function 
-
-function value($val) {
-    if(isset($_POST[$val])){
-        echo $_POST[$val];
-    }
-};
-
-
+require_once('functions.php');
