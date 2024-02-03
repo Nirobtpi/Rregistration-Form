@@ -27,9 +27,9 @@ $userData = $stm->fetch();
     <header>
         <!-- place navbar here -->
     </header>
-    <main>
+    <main class="py-4">
 
-        <div class="contaner">
+        <div class="container">
             <div class="row">
                 <div class="col-md-8 offset-2">
                     <div class="card text-start shadow p-2">

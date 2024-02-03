@@ -87,9 +87,9 @@ $userData = $stm->fetchAll();
                                                 <td scope="row"><?php echo $user['gender'] ?></td>
 
                                                 <td scope="row">
-                                                    <a href="" class="btn btn-info">Edit</a>
+                                                    <a href="edit.php?id=<?php echo $user['id'] ?>" class="btn btn-info">Edit</a>
                                                     <a href="view.php?id=<?php echo $user['id'] ?>" class="btn btn-success">View</a>
-                                                    <a href="" class="btn btn-danger">Delete</a>
+                                                    <a onclick="return confirm('Are You Sure')" href="delete.php?id=<?php echo $user['id'] ?>" class="btn btn-danger">Delete</a>
                                                 </td>
                                         </tr>
                                     <?php $i++;
@@ -115,6 +115,7 @@ $userData = $stm->fetchAll();
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"></script>
+
 </body>
 
 </html>
